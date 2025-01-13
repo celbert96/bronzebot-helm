@@ -1,0 +1,34 @@
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bronzebot-deployment
+  namespace: bronzebot
+  labels:
+    app: bronzebot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bronzebot
+  template:
+    metadata:
+      labels:
+        app: bronzebot
+    spec:
+      containers:
+      - name: bronzebot-container
+        image: ghcr.io/celbert96/bronzebot:latest
+        ports:
+        - containerPort: 80
+        env:
+          - name: BRONZE_BOT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: bronzebot-env
+                key: token
+          - name: BRONZE_BOT_DB_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: bronzebot-env
+                key: dbconnstr
